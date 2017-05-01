@@ -1,0 +1,17 @@
+---
+- name: Install Java 1.7 Open JDK
+  yum:
+    name: java-1.7.0-openjdk.x86_64
+    state: latest
+
+- name: Install java alternatives
+  alternatives: name="java" path="/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.131-2.6.9.0.el7_3.x86_64/jre/bin/java" link="/usr/bin/java"
+
+- name: Add path to environment
+  lineinfile: dest="/etc/environment" state=present backrefs=yes regexp='PATH=(["]*)((?!.*?/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.131-2.6.9.0.el7_3.x86_64/jre/bin/java/bin).*?)(["]*)$' line="PATH=\1\2:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.131-2.6.9.0.el7_3.x86_64/jre/bin/java/bin\3"
+
+- name: Set environments
+  lineinfile:  dest="/etc/environment" line='{{ item }}'
+  with_items:
+  - 'JAVA_HOME="/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.131-2.6.9.0.el7_3.x86_64/"'
+  - 'JRE_HOME="/usr/lib/jvm/jre-1.7.0"'
